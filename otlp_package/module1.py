@@ -10,11 +10,6 @@ from opentelemetry import trace
 from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExporter
 from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
 
-def set_service_name() :
-    rsrc = Resource(attributes={
-        SERVICE_NAME: "Python Application"
-    })
-    return rsrc
 
 def otlpConsoleExporter() :
 
@@ -29,8 +24,8 @@ def otlpConsoleExporter() :
     tracer = trace.get_tracer("my.tracer.name")
     return tracer
 
-def otlpHttpExporter() :
-    rsrc=set_service_name()
+def otlpHttpExporter(rsrc) :
+    
     tracerProvider = TracerProvider(resource=rsrc)
     processor = BatchSpanProcessor(OTLPSpanExporter(
             endpoint="http://localhost:4317/v1/traces"))
@@ -41,11 +36,11 @@ def otlpHttpExporter() :
     tracer = trace.get_tracer("tracer.name")
     return tracer 
 
-def otlpGRPCExporter() :
+def otlpGRPCExporter(rsrc) :
 
     tracerProvider = TracerProvider(resource=rsrc)
     processor = BatchSpanProcessor(OTLPSpanExporter(
-            endpoint="http://localhost:4317/v1/traces"))
+            endpoint="http://localhost:4318/v1/traces"))
     tracerProvider.add_span_processor(processor)
     trace.set_tracer_provider(tracerProvider)
     
